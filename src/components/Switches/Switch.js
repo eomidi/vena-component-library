@@ -1,102 +1,107 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import MuiSwitch from "@material-ui/core/Switch";
-import { GREEN_70, GRAY_50, GRAY_70, WHITE } from "../../styles/colors";
+import styled, { css } from "styled-components";
+import { GREEN_70, GRAY_50, GRAY_70 } from "../../styles/colors";
 
-const styles = theme => ({
-  switchBase: {
-    "&$switchChecked": {
-      color: WHITE,
-      "& + $switchBar": {
-        backgroundColor: GREEN_70
-      }
-    },
-    transition: theme.transitions.create("transform", {
-      duration: theme.transitions.duration.shortest,
-      easing: theme.transitions.easing.sharp
-    })
-  },
-  switchChecked: {
-    transform: "translateX(12px)",
-    "& + $switchBar": {
-      opacity: 1
-    }
-  },
-  switchBar: {
-    borderRadius: 10,
-    width: 30,
-    height: 16,
-    marginTop: -8,
-    marginLeft: -4,
-    backgroundColor: GRAY_50,
-    opacity: 1
-  },
-  switchIcon: {
-    width: 12,
-    height: 12,
-    marginLeft: 23,
-    boxShadow: "none"
-  },
-  switchLabelOn: {
-    color: GREEN_70,
-    fontWeight: 700,
-    fontSize: 12,
-    marginTop: 1,
-    fontFamily: "Open Sans"
-  },
-  switchLabelOff: {
-    color: GRAY_70,
-    fontWeight: 700,
-    fontSize: 12,
-    marginTop: 1,
-    fontFamily: "Open Sans"
+const SwitchContainer = styled.div`
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+`;
+
+const sharedStyle = css`
+  content: "";
+  position: absolute;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 45px;
+  transition: 0.2s;
+  background: #fff;
+  box-shadow: 0 0 2px 0 rgba(10, 10, 10, 0.29);
+`;
+
+const SwitchButtonSpan = styled.span`
+  ${sharedStyle};
+`;
+
+const SwitchLabel = styled.label`
+  ${sharedStyle};
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  width: 30px;
+  height: 16px;
+  background: ${(props) => (props.checked ? GREEN_70 : GRAY_50)};
+  border-radius: 10px;
+  position: relative;
+  transition: background-color 0.2s;
+
+  &:active ~ ${SwitchButtonSpan} {
+    width: 15px;
   }
-});
+`;
 
-const Switch = ({ classes, checked, onChange, enabledText, disabledText }) => (
-  <FormControlLabel
-    control={
-      <MuiSwitch
-        classes={{
-          switchBase: classes.switchBase,
-          bar: classes.switchBar,
-          icon: classes.switchIcon,
-          iconChecked: classes.switchIconChecked,
-          checked: classes.switchChecked
-        }}
-        inputProps={{ "aria-checked": checked }}
-        checked={checked}
-        onChange={onChange}
-      />
-    }
-    label={checked ? enabledText : disabledText}
-    classes={{
-      label: checked ? classes.switchLabelOn : classes.switchLabelOff
-    }}
-  />
-);
+const SwitchCheckbox = styled.input`
+  height: 0;
+  width: 0;
+  visibility: hidden;
+
+  &:checked ~ ${SwitchLabel} ${SwitchButtonSpan} {
+    left: calc(100% - 2px);
+    transform: translateX(-100%);
+  }
+`;
+
+const SwitchTitle = styled.span`
+  display: flex;
+  font-size: 12px;
+  font-weight: bold;
+  padding-left: 8px;
+  align-items: center;
+  color: ${(props) => (props.checked ? GREEN_70 : GRAY_70)};
+`;
+
+const SwitchComponentContainer = styled.div`
+  display: flex;
+`;
+
+const Switch = ({ checked, onChange, enabledText, disabledText }) => {
+  return (
+    <SwitchComponentContainer>
+      <SwitchContainer>
+        <SwitchCheckbox
+          id={`reactSwitchNew`}
+          type="checkbox"
+          checked={checked}
+          onChange={onChange}
+        />
+        <SwitchLabel checked={checked} htmlFor={`reactSwitchNew`}>
+          <SwitchButtonSpan />
+        </SwitchLabel>
+      </SwitchContainer>
+      <SwitchTitle checked={checked}>
+        {checked ? enabledText : disabledText}
+      </SwitchTitle>
+    </SwitchComponentContainer>
+  );
+};
+
+Switch.propTypes = {
+  theme: PropTypes.string,
+  enabled: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+  onStateChanged: PropTypes.func,
+};
 
 Switch.defaultProps = {
   checked: false,
   onChange: () => {},
   enabledText: "ON",
-  disabledText: "OFF"
-};
-
-Switch.propTypes = {
-  /** @ignore */
-  classes: PropTypes.object.isRequired,
-  /** Controlled switch value */
-  checked: PropTypes.bool,
-  /** Switch change handler */
-  onChange: PropTypes.func.isRequired,
-  /** Switch label enabled text */
-  enabledText: PropTypes.string,
-  /** Switch label disabled text */
-  disabledText: PropTypes.string
+  disabledText: "OFF",
 };
 
 export const SwitchComponent = Switch;
-export default withStyles(styles)(Switch);
+export default Switch;

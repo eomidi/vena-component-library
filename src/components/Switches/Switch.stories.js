@@ -7,20 +7,16 @@ import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import Switch, { SwitchComponent } from "./Switch";
 
 export const actions = {
-  onClick: action("onClick")
+  onClick: action("onClick"),
 };
 
-const addinTheme = createMuiTheme({
-  venaTheme: "addin"
-});
-
 const webTheme = createMuiTheme({
-  venaTheme: "web"
+  venaTheme: "web",
 });
 
 class SwitchDemo extends React.Component {
   state = {
-    checked: false
+    checked: false,
   };
 
   handleChange = () => {
@@ -41,7 +37,7 @@ storiesOf("Switch").add(
   withInfo({
     source: false,
     propTables: [SwitchComponent],
-    propTablesExclude: [Switch, SwitchDemo, MuiThemeProvider]
+    propTablesExclude: [Switch, SwitchDemo, MuiThemeProvider],
   })(() => (
     <div>
       <h2>Standard Switch (Web)</h2>
